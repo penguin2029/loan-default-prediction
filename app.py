@@ -2,7 +2,27 @@ import streamlit as st
 import joblib
 import numpy as np
 
-model = joblib.load('rf_model.pkl')  # loads the trained Random Forest model from file into memory
+import os
+
+if not os.path.exists("rf_model.pkl"):
+    import pandas as pd
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.model_selection import train_test_split
+    from imblearn.over_sampling import SMOTE
+
+    df = pd.read_csv("loan_data_cleaned.csv")
+    X = df.drop(columns=["SeriousDlqin2yrs"])
+    y = df["SeriousDlqin2yrs"]
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+    smote = SMOTE(random_state=42)
+    X_train_smote, y_train_smote = smote.fit_resample(X_train, y_train)
+    model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+    model.fit(X_train_smote, y_train_smote)
+    joblib.dump(model, "rf_model.pkl")
+
+model = joblib.load("rf_model.pkl")  # loads the trained Random Forest model from file into memory
 
 st.title("🏦 Loan Default Predictor") #displays a large heading on the web page
 st.write("Enter the borrower details below to predict likelihood of loan default.") #displays normal text below the title
