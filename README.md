@@ -2,6 +2,7 @@
 
 A machine learning project that predicts whether a borrower is likely to default on a loan, built on a real-world dataset of 150,000 borrowers.
 
+🚀 **Live Demo:** https://loan-default-prediction-7tb2mkxgzjjdkm7lkmmszx.streamlit.app/
 ---
 
 ## 📌 Problem Statement
